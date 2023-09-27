@@ -354,3 +354,118 @@
     flex-direction: column;
     align-items: center;
 }
+.done-task {
+  text-decoration: line-through;
+}
+
+/* The container */
+.container {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  font-size: 22px;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #474747;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+  background-color: #989898;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.label{
+  display: flex;
+}
+
+.divBG{
+  background-color: rgb(174, 174, 174);
+  padding: 15px;
+  margin: 15px;
+  width: 25%;
+  height: auto;
+  border-radius: 5%;
+}
+
+.divBG2{
+  background-color: rgb(109, 109, 109);
+  padding: 15px;
+  margin: 15px;
+  width: 25%;
+  height: auto;
+  border-radius: 5%;
+}
+
+.brkBTN{
+  background-color: #474747;
+}
+.brkBTN:hover{
+  background-color: #474747;
+}
+
+h6{
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
+
+.center{
+  text-align: center;
+}
+
+.btnHolder{
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-evenly;
+  margin: 10px;
+}

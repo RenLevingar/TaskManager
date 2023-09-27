@@ -8,9 +8,15 @@ const fetchTasks = async() =>{
 
         const taskList = data.data.map((task) => {
             if(task.status){
-                return `<h5>${task.name}<button onclick="changeStatus('${task.name}', ${task.id}, '${task.description}', ${task.status})">Done</button><h6>Desc: ${task.description}</h6></h5>`;
+                return `<div class="divBG2"><h5 class="contBox"><label class="container done-task">${task.name}
+                <input type="checkbox" onclick="changeStatus('${task.name}', ${task.id}, '${task.description}', ${task.status})" checked="checked">
+                <span class="checkmark" checked="checked"></span>
+              </label><div class="btnHolder"><button onclick="nameEdit('${task.id}', '${task.name}', '${task.description}')" disabled class="brkBTN">Edit</button> <button class="brkBTN" onclick="deleteTask(${task.id})" disabled>Delete</button></div><h6 class="done-task">Desc: ${task.description}</h6></h5></div>`;
             } else {
-                return `<h5>${task.name} <button onclick="nameEdit('${task.id}', '${task.name}', '${task.description}')">Edit</button> <button onclick="deleteTask(${task.id})">Delete</button> <button onclick="changeStatus('${task.name}', ${task.id}, '${task.description}', ${task.status})">To-Do</button><h6>Desc: ${task.description}</h6></h5>`;
+                return `<div class="divBG"><h5 class="contBox"><label class="container">${task.name}
+                <input type="checkbox" onclick="changeStatus('${task.name}', ${task.id}, '${task.description}', ${task.status})">
+                <span class="checkmark"></span>
+              </label><div class="btnHolder"><button onclick="nameEdit('${task.id}', '${task.name}', '${task.description}')">Edit</button> <button onclick="deleteTask(${task.id})">Delete</button></div> <h6>Desc: ${task.description}</h6></h5></div>`;
             }
         })
         result.innerHTML = taskList.join("");
