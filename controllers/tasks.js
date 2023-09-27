@@ -1,12 +1,12 @@
 let {tasks} = require('../data');
 
 // Get function for all people
-const readPeople = (req,res) => {
+const readTasks = (req,res) => {
     res.json({success: true, data: tasks})
 }
 
 // Post function for creating people 
-const createPeople = (req,res) => {
+const createTasks = (req,res) => {
     let length = tasks.length + 1;
     const {name, description} = req.body;
     const id = length;
@@ -19,7 +19,7 @@ const createPeople = (req,res) => {
 }
 
 // Put function for updating people
-const updatePeople = (req,res) => {
+const updateTasks = (req,res) => {
     const {id} = req.params
     const {name, description, status} = req.body
     const task = tasks.find((task) => task.id === Number(id))
@@ -40,7 +40,7 @@ const updatePeople = (req,res) => {
 }
 
 // Delete function for removing people
-const deletePeople = (req,res) => {
+const deleteTasks = (req,res) => {
     const {id} = req.params
     const task = tasks.find((task) => task.id === Number(id))
 
@@ -54,4 +54,4 @@ const deletePeople = (req,res) => {
     res.status(202).json({data:tasks, success:true});
 }
 
-module.exports = {createPeople, readPeople, updatePeople, deletePeople}
+module.exports = {createTasks, readTasks, updateTasks, deleteTasks}
