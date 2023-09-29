@@ -1,57 +1,103 @@
-let {tasks} = require('../data');
+const TASKS = require('../models/task');
 
 // Get function for all people
-const readTasks = (req,res) => {
-    res.json({success: true, data: tasks})
+const readTasks = async(req,res) => {
+    try {
+        let answer = await TASKS.find({})
+        res.json(answer);
+        console.log(answer);
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 // Post function for creating people 
-const createTasks = (req,res) => {
-    let length = tasks.length + 1;
-    const {name, description} = req.body;
-    const id = length;
-    if(!name){
-        return res.status(400).json({data:[], success:false, msg:'Please enter a name'})
-    }
-    const task = {name: name, id: id, description: description, status: false};
-    tasks.push(task);
-    res.status(201).json({success:true, data:[tasks]})
+const createTasks = async(req,res) => {
+    try {
+        const { name } = req.body; 
+        await TASKS.create({name: name});
+        let answer = await TASKS.find({})
+        res.json(answer);
+     } catch (error) {
+         console.log(error);
+     }
 }
 
 // Put function for updating people
-const updateTasks = (req,res) => {
-    const {id} = req.params
-    const {name, description, status} = req.body
-    const task = tasks.find((task) => task.id === Number(id))
-
-    if(!task){
-        return express.json({success:false, data:[]})
+const updateTasks = async(req,res) => {
+    try {
+        const { _id } = req.params
+        const { name } = req.body; 
+       await TASKS.findOneAndUpdate({_id: _id},{name:name});
+       let answer = await TASKS.find({})
+       res.json(answer);
+    } catch (error) {
+        console.log(error)
     }
-
-    const newTask = tasks.map((task) => {
-        if(task.id === Number(id)){
-            task.status = status;
-            task.name = name;
-            task.description = description;
-        }
-        return task;
-    })
-    res.status(202).json({data: newTask, success:true})
 }
 
 // Delete function for removing people
-const deleteTasks = (req,res) => {
-    const {id} = req.params
-    const task = tasks.find((task) => task.id === Number(id))
-
-    if(!task){
-        return res.status(404).json({success:false, msg:"No matching id found"});
+const deleteTasks = async(req,res) => {
+    try {
+        const { _id } = req.params
+        await TASKS.findOneAndDelete({_id:_id}); 
+        let answer = await TASKS.find({});
+        res.json(answer);
+    } catch (error) {
+        console.log(error)
     }
-
-    tasks = tasks.filter((task) => {
-        return task.id !== Number(id)
-    })
-    res.status(202).json({data:tasks, success:true});
 }
 
 module.exports = {createTasks, readTasks, updateTasks, deleteTasks}
+
+const PEOPLE = require('../models/person');
+
+// Get function for all people
+const readPeople = async(req,res) => {
+    try {
+        let answer = await PEOPLE.find({})
+        res.json(answer);
+        console.log(answer);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+// Post function for creating people 
+const createPeople = async(req,res) => {
+    try {
+        const { name } = req.body; 
+        await PEOPLE.create({name: name});
+        let answer = await PEOPLE.find({})
+        res.json(answer);
+     } catch (error) {
+         console.log(error);
+     }
+}
+
+// Put function for updating people
+const updatePeople = async(req,res) => {
+    try {
+        const { _id } = req.params
+        const { name } = req.body; 
+       await PEOPLE.findOneAndUpdate({_id: _id},{name:name});
+       let answer = await PEOPLE.find({})
+       res.json(answer);
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+// Delete function for removing people
+const deletePeople = async(req,res) => {
+    try {
+        const { _id } = req.params
+        await PEOPLE.findOneAndDelete({_id:_id}); 
+        let answer = await PEOPLE.find({});
+        res.json(answer);
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+module.exports = {createPeople, readPeople, updatePeople, deletePeople}
