@@ -14,7 +14,7 @@ app.use(express.urlencoded({extended: false}))
 // Parse JSON Data
 app.use(express.json())
 // Routes/Router
-app.use('/api/people', task);
+app.use('/api', task);
 app.use('/login', auth);
 
 
@@ -22,7 +22,7 @@ const initServer = async () => {
     try {
         await connectDB(process.env.MONGO_URI);
         app.listen(9000, () => {
-            console.log('server listening on port 7000')
+            console.log('server listening on port 9000')
         })
     } catch (err) {
         console.log(err)

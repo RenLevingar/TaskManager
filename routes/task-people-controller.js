@@ -1,19 +1,20 @@
 const express = require('express');
 const router = express.Router();
 
-const {createPeople, readPeople, updatePeople, deletePeople, createTasks, readTasks, updateTasks, deleteTasks} = require('../controllers/tasks');
+const {createPeople, readPeople, updatePeople, deletePeople, createTasks, readTasks, updateTasks, deleteTasks, getTask, getPerson} = require('../controllers/tasks');
 
 // People
-const {createPeople, readPeople, updatePeople, deletePeople, createTasks, readTasks, updateTasks, deleteTasks} = require('../controllers/tasks');
-router.get('/', readPeople);
-router.post('/', createPeople);
-router.put('/:id', updatePeople);
-router.delete('/:id', deletePeople);
+router.get('/people', readPeople);
+router.post('/people', createPeople);
+router.put('/people/:id', updatePeople);
+router.delete('/people/:id', deletePeople);
+router.get('/people/:id', getPerson);
 
 // Tasks
-router.get('/', readTasks);
-router.post('/', createTasks);
-router.put('/:id', updateTasks);
-router.delete('/:id', deleteTasks);
+router.get('/tasks', readTasks);
+router.post('/tasks', createTasks);
+router.put('/tasks/:id', updateTasks);
+router.delete('/tasks/:id', deleteTasks);
+router.get('/tasks/:id', getTask);
 
 module.exports = router;
