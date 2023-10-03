@@ -1,4 +1,4 @@
-const TASKS = require('../models/task');
+const TASKS = require('../models/task'); 
 const PEOPLE = require('../models/person');
 require("dotenv").config();
 const mongoose = require('mongoose');
@@ -22,7 +22,7 @@ const createTasks = async(req,res) => {
         const { name } = req.body; 
         const { desc } = req.body;
         let id = TASKS.length;
-        await TASKS.create({name: name, id: idValue, desc: desc});
+        await TASKS.create({name: name, id: idValue, desc: desc, status: false});
         let answer = await TASKS.find({})
         res.json(answer);
      } catch (error) {
@@ -34,10 +34,24 @@ const createTasks = async(req,res) => {
 const updateTasks = async(req,res) => {
     try {
         const { id } = req.params
-        const { name } = req.body;
-        const { desc } = req.body;
-       await TASKS.findOneAndUpdate({id: id},{name:name},{desc:desc});
+        let { name, desc, status } = req.body;
+        console.log({ name, desc, status })
+        const thisTask = TASKS.findOne({id:id});
+        console.log(thisTask)
+
+        if(!name){
+            name = thisTask.name;
+        }
+        if(!desc){
+            desc = thisTask.desc;
+        }
+        // if(!status){
+        //     status = thisTask.status;
+        // }
+
+       await TASKS.findOneAndUpdate({id: id}, {name:name,desc:desc, status: status});
        let answer = await TASKS.find({})
+       console.log(answer)
        res.json(answer);
     } catch (error) {
         console.log(error)
