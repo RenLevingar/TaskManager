@@ -349,3 +349,12 @@ h5 + h5 {
   width: 600px;
   text-align: center;
 }
+
+nav{
+  display: flex;
+  justify-content: space-evenly;
+}
+
+a{
+  font-size: xx-large;
+}
