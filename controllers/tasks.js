@@ -1,134 +1,57 @@
-const TASKS = require('../models/task');
-const PEOPLE = require('../models/person');
-require("dotenv").config();
-const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGO_URI)
+let {tasks} = require('../data');
 
 // Get function for all people
-const readTasks = async(req,res) => {
-    try {
-        let answer = await TASKS.find({})
-        res.json(answer);
-    } catch (error) {
-        console.log(error);
-    }
+const readTasks = (req,res) => {
+    res.json({success: true, data: tasks})
 }
 
 // Post function for creating people 
-let idValue = 5;
-const createTasks = async(req,res) => {
-    try {
-        idValue++;
-        const { name } = req.body; 
-        const { desc } = req.body;
-        let id = TASKS.length;
-        await TASKS.create({name: name, id: idValue, desc: desc});
-        let answer = await TASKS.find({})
-        res.json(answer);
-     } catch (error) {
-         console.log(error);
-     }
+const createTasks = (req,res) => {
+    let length = tasks.length + 1;
+    const {name, description} = req.body;
+    const id = length;
+    if(!name){
+        return res.status(400).json({data:[], success:false, msg:'Please enter a name'})
+    }
+    const task = {name: name, id: id, description: description, status: false};
+    tasks.push(task);
+    res.status(201).json({success:true, data:[tasks]})
 }
 
 // Put function for updating people
-const updateTasks = async(req,res) => {
-    try {
-        const { id } = req.params
-        const { name } = req.body;
-        const { desc } = req.body;
-       await TASKS.findOneAndUpdate({id: id},{name:name},{desc:desc});
-       let answer = await TASKS.find({})
-       res.json(answer);
-    } catch (error) {
-        console.log(error)
+const updateTasks = (req,res) => {
+    const {id} = req.params
+    const {name, description, status} = req.body
+    const task = tasks.find((task) => task.id === Number(id))
+
+    if(!task){
+        return express.json({success:false, data:[]})
     }
+
+    const newTask = tasks.map((task) => {
+        if(task.id === Number(id)){
+            task.status = status;
+            task.name = name;
+            task.description = description;
+        }
+        return task;
+    })
+    res.status(202).json({data: newTask, success:true})
 }
 
 // Delete function for removing people
-const deleteTasks = async(req,res) => {
-    try {
-        const { id } = req.params
-        await TASKS.findOneAndDelete({id:id}); 
-        let answer = await TASKS.find({});
-        res.json(answer);
-    } catch (error) {
-        console.log(error)
+const deleteTasks = (req,res) => {
+    const {id} = req.params
+    const task = tasks.find((task) => task.id === Number(id))
+
+    if(!task){
+        return res.status(404).json({success:false, msg:"No matching id found"});
     }
+
+    tasks = tasks.filter((task) => {
+        return task.id !== Number(id)
+    })
+    res.status(202).json({data:tasks, success:true});
 }
 
-// Gets one task
-const getTask = async(req,res) => {
-    try {
-        const { id } = req.params;
-        let answer = await TASKS.findOne({id});
-        res.json({answer});
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-
-
-// People function
-
-// Get function for all people
-const readPeople = async(req,res) => {
-    try {
-        await PEOPLE.find({}).then((x) => {res.json({x});});
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-// Post function for creating people
-let idPeople = 5; 
-const createPeople = async(req,res) => {
-    try {
-        idPeople++;
-        const { name } = req.body; 
-        const { age } =req.body;
-        await PEOPLE.create({name: name, id: idPeople, age: age});
-        let answer = await PEOPLE.find({})
-        res.json(answer);
-     } catch (error) {
-         console.log(error);
-     }
-}
-
-// Put function for updating people
-const updatePeople = async(req,res) => {
-    try {
-        const { id } = req.params;
-        const { name } = req.body; 
-       await PEOPLE.findOneAndUpdate({id: id},{name: name});
-       let answer = await PEOPLE.find({})
-       res.json(answer);
-    } catch (error) {
-        console.log(error)
-    }
-}
-
-// Delete function for removing people
-const deletePeople = async(req,res) => {
-    try {
-        const { id } = req.params
-        await PEOPLE.findOneAndDelete({id: id}); 
-        let answer = await PEOPLE.find({});
-        res.json(answer);
-    } catch (error) {
-        console.log(error)
-    }
-}
-
-// Gets one task
-const getPerson = async(req,res) => {
-    try {
-        const { id } = req.params;
-        let answer = await PEOPLE.findOne({id});
-        res.json({answer});
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-module.exports = {createPeople, readPeople, updatePeople, deletePeople, createTasks, readTasks, updateTasks, deleteTasks, getTask, getPerson}
+module.exports = {createTasks, readTasks, updateTasks, deleteTasks}
