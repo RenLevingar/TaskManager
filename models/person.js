@@ -21,6 +21,11 @@ const personScheme = new mongoose.Schema({
         default: false,
         trim: true
     },
+    task:{
+        type: String,
+        default: "0",
+        trim: true
+    }
 },{collection:"People"})
 
 module.exports = mongoose.model('People', personScheme)

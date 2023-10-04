@@ -339,7 +339,7 @@ nav {
   justify-content: center;
 }
 h5 + h5 {
-  margin-left: 1rem;
+  /* margin-left: 1rem; */
 }
 .form-alert {
   color: var(--red-dark);
@@ -357,4 +357,15 @@ nav{
 
 a{
   font-size: xx-large;
+}
+
+.roster{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.roster2{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }

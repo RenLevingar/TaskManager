@@ -15,14 +15,15 @@ const readTasks = async(req,res) => {
 }
 
 // Post function for creating people 
-let idValue = 5;
+let idValue = 20;
 const createTasks = async(req,res) => {
     try {
         idValue++;
         const { name } = req.body; 
         const { desc } = req.body;
-        let id = TASKS.length;
-        await TASKS.create({name: name, id: idValue, desc: desc, status: false});
+        const { person } = req.body;
+        await TASKS.create({name: name, id: idValue, desc: desc, status: false, person: person});
+        await PEOPLE.findOneAndUpdate({id: person}, {task: idValue});
         let answer = await TASKS.find({})
         res.json(answer);
      } catch (error) {
@@ -34,10 +35,8 @@ const createTasks = async(req,res) => {
 const updateTasks = async(req,res) => {
     try {
         const { id } = req.params
-        let { name, desc, status } = req.body;
-        console.log({ name, desc, status })
+        let { name, desc, status, person } = req.body;
         const thisTask = TASKS.findOne({id:id});
-        console.log(thisTask)
 
         if(!name){
             name = thisTask.name;
@@ -45,11 +44,15 @@ const updateTasks = async(req,res) => {
         if(!desc){
             desc = thisTask.desc;
         }
+        if(!person){
+            person = thisTask.person;
+        }
         // if(!status){
         //     status = thisTask.status;
         // }
 
-       await TASKS.findOneAndUpdate({id: id}, {name:name,desc:desc, status: status});
+       await TASKS.findOneAndUpdate({id: id}, {name:name,desc:desc, status: status, person: person});
+       await PEOPLE.findOneAndUpdate({id: person}, {task: id});
        let answer = await TASKS.find({})
        console.log(answer)
        res.json(answer);
@@ -101,7 +104,9 @@ const createPeople = async(req,res) => {
         idPeople++;
         const { name } = req.body; 
         const { age } =req.body;
-        await PEOPLE.create({name: name, id: idPeople, age: age});
+        const { task } = req.body;
+        await PEOPLE.create({name: name, id: idPeople, age: age, task: task});
+        await TASKS.findOneAndUpdate({id: task}, {person: idPeople});
         let answer = await PEOPLE.find({})
         res.json(answer);
      } catch (error) {
@@ -113,8 +118,9 @@ const createPeople = async(req,res) => {
 const updatePeople = async(req,res) => {
     try {
         const { id } = req.params;
-        const { name } = req.body; 
-       await PEOPLE.findOneAndUpdate({id: id},{name: name});
+        const { name, age, task } = req.body; 
+       await PEOPLE.findOneAndUpdate({id: id},{name: name, age:age, task: task});
+       await TASKS.findOneAndUpdate({id: task}, {person: id});
        let answer = await PEOPLE.find({})
        res.json(answer);
     } catch (error) {

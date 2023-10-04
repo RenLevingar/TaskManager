@@ -10,12 +10,12 @@ const fetchTasks = async() =>{
                 return `<div class="divBG2"><h5 class="contBox"><label class="container done-task">${task.name}
                 <input type="checkbox" id="item${task.id}" onclick="changeStatus('${task.name}', ${task.id}, '${task.desc}', ${task.status})" checked="checked">
                 <span class="checkmark" checked="checked"></span>
-              </label><div class="btnHolder"><button onclick="nameEdit('${task.id}', '${task.name}', '${task.desc}')" disabled class="brkBTN">Edit</button> <button class="brkBTN" onclick="deleteTask(${task.id})" disabled>Delete</button></div><h6 class="done-task">Desc: ${task.desc}</h6></h5></div>`;
+              </label><div class="btnHolder"><button onclick="nameEdit('${task.id}', '${task.name}', '${task.desc}', '${task.person}')" disabled class="brkBTN">Edit</button> <button class="brkBTN" onclick="deleteTask(${task.id})" disabled>Delete</button></div><h6 class="done-task">Desc: ${task.desc}</h6></h5></div>`;
             } else {
                 return `<div class="divBG"><h5 class="contBox"><label id='task${task.id}' class="container">${task.name}
                 <input type="checkbox" id="item${task.id}" onclick="changeStatus('${task.name}', ${task.id}, '${task.desc}', ${task.status})">
                 <span class="checkmark"></span>
-              </label><div class="btnHolder"><button onclick="nameEdit('${task.id}', '${task.name}', '${task.desc}')">Edit</button> <button onclick="deleteTask(${task.id})">Delete</button></div> <h6>Desc: ${task.desc}</h6></h5>
+              </label><div class="btnHolder"><button onclick="nameEdit('${task.id}', '${task.name}', '${task.desc}', '${task.person}')">Edit</button> <button onclick="deleteTask(${task.id})">Delete</button></div> <h6>Desc: ${task.desc}</h6></h5>
               </div>`;
             }
         })
@@ -31,26 +31,30 @@ fetchTasks();
 const btn = document.querySelector(".submit-btn");
 const input = document.querySelector(".form-input");
 const input2 = document.querySelector(".desc-input");
+const input3 = document.querySelector(".id-input");
 const formAlert = document.querySelector(".form-alert");
 
 btn.addEventListener("click", async (e) => {
     e.preventDefault();
     const nameValue = input.value;
     const descValue = input2.value;
+    const idValue = input3.value;
 
     try {
         if(editMode == false) {
-            const {data} = await axios.post('/api/tasks', {name: nameValue, desc: descValue});
+            console.log(idValue);
+            const {data} = await axios.post('/api/tasks', {name: nameValue, desc: descValue, person: idValue});
             const h5 = document.createElement('h5');
             result.appendChild(h5);
             h5.textContent = data.task;
         } else {
             const newTask = input.value;
             const newDesc = input2.value;
+            const newID = input3.value;
             fetch(`/api/tasks/${currentID}`, {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({name: newTask, desc: newDesc, status: false})
+                body: JSON.stringify({name: newTask, desc: newDesc, status: false, person: newID})
             })
             fetchTasks();
             editMode = false;
@@ -62,6 +66,7 @@ btn.addEventListener("click", async (e) => {
     }
     input.value = "";
     input2.value = "";
+    input3.value = "";
 })
 
 async function deleteTask(id) {
@@ -74,11 +79,12 @@ async function deleteTask(id) {
 
 var currentID = '';
 
-function nameEdit(pId, pName, pDesc) {
+function nameEdit(pId, pName, pDesc, pAssign) {
     editMode = true;
     input.value = pName;
     currentID = pId;
     input2.value = pDesc;
+    input3.value = pAssign;
 }
 
 async function changeStatus(name, id, desc, status) {
@@ -109,22 +115,4 @@ async function changeStatus(name, id, desc, status) {
     }
     
     fetchTasks();
-    // console.log(name + " " + id + " " + desc + " " + status);
-    // if(status){
-    //     console.log('it was true')
-    //     await fetch(`/api/tasks/${id}`, {
-    //         method: 'PUT',
-    //         headers: {'Content-Type': 'application/json'},
-    //         body: JSON.stringify({name: name, desc: desc, status: false})
-    //     })
-    //     fetchTasks();
-    // } else {
-    //     console.log('it was false')
-    //     fetch(`/api/tasks/${id}`, {
-    //         method: 'PUT',
-    //         headers: {'Content-Type': 'application/json'},
-    //         body: JSON.stringify({name: name, desc: desc, status: true})
-    //     })
-    //     fetchTasks();
-    // }
 }
