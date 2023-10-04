@@ -65,7 +65,8 @@ const updateTasks = async(req,res) => {
 const deleteTasks = async(req,res) => {
     try {
         const { id } = req.params
-        await TASKS.findOneAndDelete({id:id}); 
+        await PEOPLE.findOneAndUpdate({id: person}, {task: 0});
+        await TASKS.findOneAndDelete({id:id});
         let answer = await TASKS.find({});
         res.json(answer);
     } catch (error) {
@@ -131,7 +132,9 @@ const updatePeople = async(req,res) => {
 // Delete function for removing people
 const deletePeople = async(req,res) => {
     try {
-        const { id } = req.params
+        const { id } = req.params;
+        const { task} = req.params;
+        await TASKS.findOneAndUpdate({id: task}, {task: 0});
         await PEOPLE.findOneAndDelete({id: id}); 
         let answer = await PEOPLE.find({});
         res.json(answer);
