@@ -77,6 +77,12 @@
   }
 }
 
+.taskOne, .personOne{
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
 body {
   background: var(--backgroundColor);
   color: var(--textColor);

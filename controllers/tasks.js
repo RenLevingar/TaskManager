@@ -119,7 +119,19 @@ const createPeople = async(req,res) => {
 const updatePeople = async(req,res) => {
     try {
         const { id } = req.params;
-        const { name, age, task } = req.body; 
+        let { name, age, task } = req.body; 
+        let thisPerson = await PEOPLE.findOne({id: id});
+
+        if(!name){
+            name = thisPerson.name;
+        }
+        if(!age){
+            age = thisPerson.desc;
+        }
+        if(!task){
+            task = thisPerson.task;
+        }
+
        await PEOPLE.findOneAndUpdate({id: id},{name: name, age:age, task: task});
        await TASKS.findOneAndUpdate({id: task}, {person: id});
        let answer = await PEOPLE.find({})
